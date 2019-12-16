@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+ <body style="background-color: #e8f3f7">
+    <div class="col=6">
+        <div class="Container" style="width:70%; background-color:#fff; border-radius:15px; padding-left: 50px; padding-right: 50px; padding-top:50px; margin-top: 50px; margin-bottom:50px; padding-bottom:50px">
+                {% if user.is_authenticated %}
+                    <h2>Welcome to Address Manager, {{ user.first_name }} !!!!</h2><br><br>
+                    <h4> Upload Excel File</h4><br>
+                    <form action="{% url 'tes:index' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" title="Upload excel file" name="excel_file" style="border: 1px solid black; padding: 5px;" required="required">
+                        <p>
+                            <input type="submit" value="Upload" class="btn btn-primary" style="border-radius: 5px; padding:5px; margin-top:10px; cursor: pointer;">
+                    </form>
+                    <hr>
+                    <h4>Uploaded File Details:</h4>
+                    {% for row in excel_data %}
+                        {% for cell in row %}
+                            {{ cell }}&nbsp;&nbsp;
+                        {% endfor %}
+                        <br>
+                    {% endfor %}
+                    <hr>
+                    <h4>Download the files uploaded by {{ request.user.first_name }}</h4>
+                    {% for e in q %}
+                         <a href="/media/{{ e.excelfile }}/" class="btn btn-primary" style="border-radius: 5px; padding:5px; margin-top:10px; cursor: pointer; margin-left:5px;">Download file {{ e.pk }}</a>
+                    {% endfor %}
+                {% else %}
+                    <h3>Signup for Address Locator !!!!</h3>
+                    <ul>
+                        <li>Upload Excel file with address.</li>
+                        <li>App gets the longitude and latitude for it.</li>
+                        <li>Download Excel Sheet with appended data.</li>
+                    </ul>
+                {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock %}
